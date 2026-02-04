@@ -3,19 +3,22 @@ import { useState, useEffect } from 'react'
 const API = '/api'
 
 const STATUS_COLORS = {
-    'Planning to play': '#22c55e',
-    'Unsure': '#eab308',
+    'Yes, planning to play': '#22c55e',
+    'Unsure just yet': '#eab308',
     'Unlikely to play': '#a855f7',
+    'Fill-in / Emergency': '#3b82f6',
+    'New to club/restarting': '#06b6d4',
     'Not heard from': '#9ca3af',
     'Not returning': '#ef4444',
-    'Fill-in only': '#9ca3af',
 }
 
-export default function Dashboard({ teams, onTeamClick }) {
+export default function Dashboard({ teams, onTeamClick, onViewAll, onViewRecruits, onViewGoalkeepers }) {
     const [data, setData] = useState(null)
+    const [recruitCount, setRecruitCount] = useState(0)
 
     useEffect(() => {
         fetch(`${API}/dashboard`).then(r => r.json()).then(setData)
+        fetch(`${API}/recruits`).then(r => r.json()).then(recruits => setRecruitCount(recruits.length))
     }, [])
 
     if (!data) return <p className="loading">Loading...</p>
@@ -38,6 +41,29 @@ export default function Dashboard({ teams, onTeamClick }) {
             </div>
 
             <div className="team-grid">
+                {/* All Players Tile */}
+                <div className="team-card special-tile" onClick={onViewAll}>
+                    <h2 className="team-card-title">📋 All Players</h2>
+                    <div className="team-card-counts">
+                        <span><strong>{totalMain}</strong> total players</span>
+                    </div>
+                </div>
+
+                {/* Recruits Tile */}
+                <div className="team-card special-tile" onClick={onViewRecruits}>
+                    <h2 className="team-card-title">🎯 New Recruits</h2>
+                    <div className="team-card-counts">
+                        <span><strong>{recruitCount}</strong> recruits</span>
+                    </div>
+                </div>
+                {/* Goalkeepers Tile */}
+                <div className="team-card" onClick={onViewGoalkeepers} style={{background: '#10b981', color: '#fff'}}>
+                    <h2 className="team-card-title">🧤 Goalkeepers</h2>
+                    <div className="team-card-counts" style={{color: 'rgba(255,255,255,0.9)'}}>
+                        <span>View all GKs</span>
+                    </div>
+                </div>
+
                 {teams.map(team => {
                     const d = data[team] || {}
                     const breakdown = d.status_breakdown || {}

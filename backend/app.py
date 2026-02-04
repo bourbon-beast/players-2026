@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, request
-from db import get_db, init_db, TEAMS, VALID_STATUSES
+from flask_cors import CORS
+from db import get_db, init_db, TEAMS, VALID_STATUSES, POSITIONS
 
 app = Flask(__name__)
+CORS(app)
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -9,6 +11,7 @@ app = Flask(__name__)
 # Fields we expose via the API (excludes internal/raw sheet dupes)
 PLAYER_FIELDS = [
     'id', 'name', 'main_team', 'status', 'notes',
+    'position', 'team_2026', 'is_recruit',
     'email', 'mobile',
     'submission_id', 'respondent_id', 'submitted_at',
     'playing_availability', 'fillin_emergency', 'happy_followup',
@@ -125,14 +128,16 @@ def update_player(player_id):
     data = request.get_json()
     status = data.get('status', row['status'])
     notes = data.get('notes', row['notes'] or '')
+    position = data.get('position', row['position'])
+    team_2026 = data.get('team_2026', row['team_2026'])
 
     if status not in VALID_STATUSES:
         conn.close()
         return jsonify({'error': 'Invalid status'}), 400
 
     conn.execute(
-        "UPDATE players SET status = ?, notes = ?, updated_at = datetime('now') WHERE id = ?",
-        (status, notes, player_id)
+        "UPDATE players SET status = ?, notes = ?, position = ?, team_2026 = ?, updated_at = datetime('now') WHERE id = ?",
+        (status, notes, position, team_2026, player_id)
     )
     conn.commit()
     p = full_player(conn, player_id)
@@ -207,9 +212,25 @@ def remove_appearance(player_id, team):
 def get_teams():
     return jsonify(TEAMS)
 
+@app.route('/api/positions', methods=['GET'])
+def get_positions():
+    return jsonify(POSITIONS)
+
 @app.route('/api/statuses', methods=['GET'])
 def get_statuses():
     return jsonify(VALID_STATUSES)
+
+@app.route('/api/recruits', methods=['GET'])
+def get_recruits():
+    conn = get_db()
+    rows = conn.execute('SELECT * FROM players WHERE is_recruit = 1 ORDER BY name').fetchall()
+    result = []
+    for r in rows:
+        p = player_row_to_dict(r)
+        p['appearances'] = get_appearances(conn, r['id'])
+        result.append(p)
+    conn.close()
+    return jsonify(result)
 
 @app.route('/api/dashboard', methods=['GET'])
 def dashboard():

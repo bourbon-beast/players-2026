@@ -5,13 +5,22 @@ DB_PATH = os.path.join(os.path.dirname(__file__), 'players.db')
 TEAMS = ['PL', 'PLR', 'PB', 'PC', 'PE', 'Metro']
 GRADE_ORDER = {'Metro': 0, 'PE': 1, 'PC': 2, 'PB': 3, 'PLR': 4, 'PL': 5}
 
+POSITIONS = [
+    'GK',
+    'Defender',
+    'Defensive Mid',
+    'Attacking Mid',
+    'Striker',
+]
+
 VALID_STATUSES = [
-    'Planning to play',
-    'Unsure',
+    'Yes, planning to play',
+    'Unsure just yet',
     'Unlikely to play',
+    'Fill-in / Emergency',
+    'New to club/restarting',
     'Not heard from',
     'Not returning',
-    'Fill-in only',
 ]
 
 def get_db():
@@ -29,6 +38,11 @@ def init_db():
             main_team           TEXT NOT NULL,
             status              TEXT NOT NULL DEFAULT 'Not heard from',
             notes               TEXT DEFAULT '',
+            
+            -- 2026 Planning
+            position            TEXT,                      -- GK, Defender, Defensive Mid, Attacking Mid, Striker
+            team_2026           TEXT,                      -- Team planned for 2026
+            is_recruit          INTEGER DEFAULT 0,         -- 1 if new recruit, 0 if existing player
 
             -- Contact
             email               TEXT,

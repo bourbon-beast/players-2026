@@ -2,9 +2,11 @@ import { useState } from 'react'
 
 const API = '/api'
 
-export default function PlayerDetail({ player, teams, statuses, onBack }) {
+export default function PlayerDetail({ player, teams, statuses, positions, onBack }) {
     const [status, setStatus] = useState(player.status)
     const [notes, setNotes] = useState(player.notes || '')
+    const [position, setPosition] = useState(player.position || '')
+    const [team2026, setTeam2026] = useState(player.team_2026 || '')
     const [saved, setSaved] = useState(false)
     const [appearances, setAppearances] = useState(player.appearances || [])
     const [addTeam, setAddTeam] = useState('')
@@ -13,12 +15,12 @@ export default function PlayerDetail({ player, teams, statuses, onBack }) {
     const otherApps = appearances.filter(a => !a.is_main)
     const availableTeams = teams.filter(t => !appearances.find(a => a.team === t))
 
-    // Save status + notes
+    // Save status + notes + position + team_2026
     const handleSave = () => {
         fetch(`${API}/players/${player.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status, notes }),
+            body: JSON.stringify({ status, notes, position: position || null, team_2026: team2026 || null }),
         })
             .then(r => r.json())
             .then(() => setSaved(true))
@@ -69,12 +71,26 @@ export default function PlayerDetail({ player, teams, statuses, onBack }) {
                 <span className="detail-main-team">Main: {player.main_team} ({mainApp?.games || 0} games)</span>
             </div>
 
-            {/* Status + Notes — the main edit controls */}
+            {/* Status + Notes + Position + Team 2026 — the main edit controls */}
             <div className="detail-edit">
                 <div className="field">
-                    <label>Status</label>
+                    <label>2026 Playing</label>
                     <select value={status} onChange={e => setStatus(e.target.value)}>
                         {statuses.map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                </div>
+                <div className="field">
+                    <label>Position</label>
+                    <select value={position} onChange={e => setPosition(e.target.value)}>
+                        <option value="">—</option>
+                        {positions.map(p => <option key={p} value={p}>{p}</option>)}
+                    </select>
+                </div>
+                <div className="field">
+                    <label>2026 Team</label>
+                    <select value={team2026} onChange={e => setTeam2026(e.target.value)}>
+                        <option value="">—</option>
+                        {teams.map(t => <option key={t} value={t}>{t}</option>)}
                     </select>
                 </div>
                 <div className="field">

@@ -9,7 +9,7 @@ import openpyxl
 from db import init_db, get_db, TEAMS, GRADE_ORDER
 
 EXCEL_PATH = os.path.join(os.path.dirname(__file__),'status.xlsx')
-CSV_PATH   = os.path.join(os.path.dirname(__file__),'men_responses.csv')
+CSV_PATH   = os.path.join(os.path.dirname(__file__),'men_responses_v2.csv')
 
 # ---------------------------------------------------------------------------
 # 1. Parse CSV into a lookup by normalised name
@@ -162,6 +162,11 @@ def seed():
         mobile_raw = csv_row.get('Mobile number', '')
         mobile = re.sub(r'\D', '', mobile_raw) if mobile_raw else None
 
+        # Status: read from CSV, default to 'Not heard from'
+        status = csv_row.get('Playing availability for the 2026 winter season?', '').strip()
+        if not status:
+            status = 'Not heard from'
+
         conn.execute('''
             INSERT INTO players (
                 name, main_team, status, notes, email, mobile,
@@ -174,7 +179,7 @@ def seed():
         ''', (
             data['name'],
             main_team,
-            'Not heard from',       # status set manually after seeding
+            status,                 # now reading from CSV
             '',                     # notes
             csv_row.get('Email') or None,
             mobile,
