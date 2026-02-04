@@ -1,11 +1,5 @@
 /* ===== Reset & Base ===== */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
-html, body {
-  width: 100%;
-  height: 100%;
-}
-
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: #f3f4f6;
@@ -14,16 +8,9 @@ body {
   line-height: 1.5;
 }
 
-.app {
-  min-height: 100vh;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
 /* ===== Nav ===== */
 .nav {
-  background: #2d3748;
+  background: #1e293b;
   color: #fff;
   padding: 12px 24px;
   display: flex;
@@ -32,7 +19,6 @@ body {
   position: sticky;
   top: 0;
   z-index: 10;
-  width: 100%;
 }
 .nav-title { cursor: pointer; font-size: 18px; font-weight: 600; user-select: none; }
 .btn-back {
@@ -47,31 +33,31 @@ body {
 .btn-back:hover { background: #334155; }
 
 /* ===== Main ===== */
-.main { 
-  padding: 24px;
-  flex: 1;
-  width: 100%;
-}
-
-.loading { color: #6b7280; padding: 24px 0; text-align: center; }
+.main { padding: 24px; }
+.loading { color: #6b7280; padding: 24px 0; }
 .empty { color: #9ca3af; padding: 12px 0; font-style: italic; }
 
 /* ===== Dashboard ===== */
-.dashboard {
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
 .dashboard-summary {
   display: flex;
   gap: 16px;
   margin-bottom: 24px;
 }
+.summary-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.summary-num { font-size: 28px; font-weight: 700; color: #1e293b; }
+.summary-label { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
 
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 16px;
 }
 .team-card {
@@ -115,13 +101,14 @@ body {
   border-collapse: collapse; 
   background: #fff; 
   border-radius: 10px; 
+  overflow: hidden; 
   box-shadow: 0 1px 3px rgba(0,0,0,0.08); 
 }
 
 .player-table thead {
   position: sticky;
-  top: 0;
-  z-index: 1;
+  top: 48px;
+  z-index: 5;
 }
 
 .player-table th { 
@@ -133,8 +120,7 @@ body {
   letter-spacing: 0.5px; 
   color: #64748b; 
   border-bottom: 1px solid #e2e8f0; 
-}
-.player-table td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; }
+}.player-table td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; }
 .player-row { cursor: pointer; transition: background 0.1s; }
 .player-row:hover { background: #f0f7ff; }
 .td-num { color: #9ca3af; width: 36px; }
@@ -233,193 +219,3 @@ body {
 .sheet-data td { padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
 .sheet-label { color: #6b7280; width: 180px; font-weight: 500; }
 .sheet-value { color: #374151; }
-/* ===== Team Planning (Side-by-Side View) ===== */
-.team-planning {
-  background: #fff;
-  border-radius: 12px;
-  padding: 24px;
-  width: 100%;
-}
-
-.planning-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #e5e7eb;
-}
-
-.planning-header h2 {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.team-selector select {
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
-  font-size: 14px;
-}
-
-.planning-grid {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 24px;
-}
-
-.planning-column {
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 16px;
-  background: #fafafa;
-}
-
-.column-heading {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: #374151;
-}
-
-.squad-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #fff;
-  border-radius: 6px;
-}
-
-.squad-table thead {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.squad-table th {
-  background: #f9fafb;
-  padding: 8px;
-  text-align: left;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #64748b;
-  border-bottom: 1px solid #e2e8f0;
-}
-  text-align: left;
-  font-size: 12px;
-  font-weight: 600;
-  color: #6b7280;
-  text-transform: uppercase;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.squad-table td {
-  padding: 14px 10px;
-  border-bottom: 1px solid #f3f4f6;
-}
-
-.squad-table tbody tr:hover {
-  background: #f9fafb;
-  cursor: pointer;
-}
-
-/* ===== Special Dashboard Tiles ===== */
-.special-tile {
-  background: #3b82f6;
-  color: #fff !important;
-  border: none !important;
-}
-
-.special-tile h2 {
-  color: #fff !important;
-}
-
-.special-tile .team-card-counts span {
-  color: rgba(255, 255, 255, 0.95);
-}
-
-.special-tile .team-card-counts strong {
-  color: #fff;
-}
-
-/* ===== Smaller table cells for extended data ===== */
-.td-small {
-  font-size: 12px;
-  color: #6b7280;
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.player-table {
-  font-size: 13px;
-}
-
-.player-table th {
-  font-size: 11px;
-}
-
-/* ===== Inline editing select ===== */
-.inline-select {
-  padding: 4px 8px;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  font-size: 12px;
-  background: #fff;
-  color: #374151;
-  cursor: pointer;
-}
-
-.inline-select option {
-  color: #374151;
-  background: #fff;
-}
-
-.inline-select:hover {
-  border-color: #9ca3af;
-}
-
-.inline-select:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-/* ===== Checkbox filter ===== */
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  background: #f9fafb;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 13px;
-  user-select: none;
-}
-
-.checkbox-label:hover {
-  background: #f3f4f6;
-}
-
-.checkbox-label input[type="checkbox"] {
-  cursor: pointer;
-}
-
-.checkbox-label span {
-  color: #374151;
-}
-
-.summary-card {
-  background: #fff;
-  border-radius: 10px;
-  padding: 16px 24px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-}
-.summary-num { font-size: 28px; font-weight: 700; color: #1e293b; }
-.summary-label { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
